@@ -1,6 +1,7 @@
 Esse é o Readme do trabalho final de CPD
 
 Estruturas:
+
 2.1 - Hash para jogadores; (A)
 
 2.2 - Trie para jogador;(A)
@@ -10,6 +11,7 @@ Estruturas:
 2.4 - trie para tags (lista de ids); (F)
 
 Pesquisas:
+
 3.1 - Usar a trie (ordenar); (A)
 
 3.2 - Percorrer a Hash , Ordenar , printar só os 30 maiores; (F)
