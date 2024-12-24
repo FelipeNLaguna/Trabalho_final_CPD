@@ -117,7 +117,7 @@ void monta_hash(){
     for(const auto& user : users){
         insere_user(ht,user);
     }
-    // Estrutura pronat
+    // Estrutura pronta
     //testes 
      size_t metade = 100;
 
