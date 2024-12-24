@@ -30,7 +30,7 @@ private:
         return get(x->next[c], key, d + 1);
     }
 
-    std::shared_ptr<Node> put(std::shared_ptr<Node> x, const std::string& key, std::shared_ptr<Jogador> val, int d)
+    std::shared_ptr<Node> put(std::shared_ptr<Node> x, const std::string& key, std::shared_ptr<Value> val, int d)
     {
         if (x == nullptr)
             x = std::make_shared<Node>();
@@ -79,9 +79,9 @@ public:
         return x->val;
     }
 
-    void put(const std::string& key, Jogador val)
+    void put(const std::string& key, Value val)
     {
-        root = put(root, key, std::make_shared<Jogador>(val), 0);
+        root = put(root, key, std::make_shared<Value>(val), 0);
     }
 
     std::vector<std::string> keys()

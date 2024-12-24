@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 #include <iostream>
 #include <fstream> // Para std::ifstream
 #include "parser.hpp" // Inclua o arquivo parser.hpp

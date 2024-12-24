@@ -40,7 +40,6 @@ int main()
         }
 
         std::vector<std::string> allKeys = trie.keys();
-        std::cout << "Chaves armazenadas na Trie:" << std::endl;
     }
     catch (const std::exception &e)
     {
