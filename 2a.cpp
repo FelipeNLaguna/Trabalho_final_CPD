@@ -36,8 +36,11 @@ int main()
             }
             Jogador *j = new Jogador(stoi(row[0]), row[1], row[2], row[3], row[4]);
             hashing(*j, hash_jogadores, TAM_HASH);
-            trie.put(row[1], *j);
+            trie.put(j->short_name, *j);
         }
+
+        std::vector<std::string> allKeys = trie.keys();
+        std::cout << "Chaves armazenadas na Trie:" << std::endl;
     }
     catch (const std::exception &e)
     {
