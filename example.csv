@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 Nome,Idade,Cidade
 Alice,30,São Paulo
 Bob,25,Rio de Janeiro
 Carol,35,Belo Horizonte
+=======
+Nome,Idade,Cidade
+Alice,30,São Paulo
+Bob,25,Rio de Janeiro
+Carol,35,Belo Horizonte
+>>>>>>> b323af9c7cb8f5368ab7ff1fe765f1db2b1e8be2
