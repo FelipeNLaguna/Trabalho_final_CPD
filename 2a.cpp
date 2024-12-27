@@ -1,33 +1,41 @@
 #include <iostream>
-#include <fstream>    // Para std::ifstream
+#include <fstream> // Para std::ifstream
+#include <chrono>
 #include "parser.hpp" // Inclua o arquivo parser.hpp
 #include "Jogador.hpp"
-#include "hash.hpp"
+#include "hash_jog.hpp"
 #include "TrieST.hpp"
-#define TAM_HASH 10000
+#define TAM_HASH 14600
 
 int main()
 {
     try
     {
-        vector<pJogador *> hash_jogadores(TAM_HASH, nullptr);
+
+        vector<Jogador *> hash_jogadores(TAM_HASH, nullptr);
 
         // Abra o arquivo CSV usando std::ifstream
-        std::ifstream file("players.csv");
+        std::ifstream players("players.csv");
+
+        std::ifstream rating("minirating.csv");
 
         // Verifique se o arquivo foi aberto corretamente
-        if (!file.is_open())
+        if (!players.is_open())
         {
             throw std::runtime_error("Não foi possível abrir o arquivo CSV.");
         }
 
-        aria::csv::CsvParser parser(file);
+        aria::csv::CsvParser players_csv(players);
+        aria::csv::CsvParser rating_csv(rating);
 
         TrieST<Jogador> trie;
 
         bool cabecalho = true;
         // Itere sobre o conteúdo do CSV
-        for (const auto &row : parser)
+
+        auto inicio = chrono::high_resolution_clock::now();
+
+        for (const auto &row : players_csv)
         {
             if (cabecalho)
             {
@@ -35,11 +43,36 @@ int main()
                 continue;
             }
             Jogador *j = new Jogador(stoi(row[0]), row[1], row[2], row[3], row[4]);
-            hashing(*j, hash_jogadores, TAM_HASH);
+            // hashingJ(*j, hash_jogadores, TAM_HASH);
+            hashingJ2(j, hash_jogadores, TAM_HASH);
             trie.put(j->short_name, *j);
         }
 
-        std::vector<std::string> allKeys = trie.keys();
+        cabecalho = true;
+
+        for (const auto &row : rating_csv)
+        {
+            if (cabecalho)
+            {
+                cabecalho = false;
+                continue;
+            }
+
+            // Jogador *jog_aux = (buscaHashJ(stoi(row[1]), hash_jogadores));
+            Jogador *jog_aux = (buscaHashJ2(stoi(row[1]), hash_jogadores));
+            (*jog_aux).add_avaliacao(stof(row[2]));
+        }
+
+        auto fim = chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> duracao = fim - inicio;
+
+        std::cout << " " << duracao.count() << std::endl;
+
+        // imprimeHashJ(hash_jogadores);
+        imprimeHashJ2(hash_jogadores);
+
+        players.close();
+        rating.close();
     }
     catch (const std::exception &e)
     {
