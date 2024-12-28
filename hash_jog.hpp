@@ -24,18 +24,18 @@ Jogador *buscaHashJ(int sofifa_id, vector<pJogador *> jogadores)
     return {nullptr};
 }
 
-Jogador *buscaHashJ2(int sofifa_id, vector<Jogador *> jogadores)
+Jogador *buscaHashJ2(int sofifa_id, const std::vector<Jogador *> &jogadores)
 {
+    int index = sofifa_id % jogadores.size();
     for (int i = 0; i < jogadores.size(); ++i)
     {
-        int index = ((sofifa_id % jogadores.size()) + i * i) % jogadores.size();
-        if (!jogadores[index])
-            return nullptr; // Empty slot
-        if (jogadores[index] && jogadores[index]->sofifa_id == sofifa_id)
-            return jogadores[index]; // Found key
+        int probe_index = (index + i * i) % jogadores.size();
+        if (!jogadores[probe_index])
+            return nullptr; // Slot vazio, jogador não encontrado
+        if (jogadores[probe_index]->sofifa_id == sofifa_id)
+            return jogadores[probe_index]; // Jogador encontrado
     }
-
-    return {nullptr};
+    return nullptr; // Jogador não encontrado após tentar todos os índices
 }
 
 void percorreExecuta(vector<pJogador *> jogadores, void (*f)(Jogador))
@@ -99,19 +99,19 @@ int hashingJ(Jogador jogador, vector<pJogador *> &jogadores, int modulo)
     return 1;
 }
 
-int hashingJ2(Jogador *jogador, vector<Jogador *> &jogadores, int modulo)
+int hashingJ2(Jogador *jogador, std::vector<Jogador *> &jogadores, int modulo)
 {
-
+    int index = jogador->sofifa_id % modulo;
     for (int i = 0; i < modulo; ++i)
     {
-        int index = (jogador->sofifa_id % modulo + i * i) % modulo; // Quadratic probing
-        if (!jogadores[index] || jogadores[index] == nullptr)
-        { // Empty or deleted slot
-            jogadores[index] = jogador;
-            return 1;
+        int probe_index = (index + i * i) % modulo; // Quadratic probing
+        if (!jogadores[probe_index])                // Encontra slot vazio
+        {
+            jogadores[probe_index] = jogador;
+            return probe_index; // Retorna o índice onde foi inserido
         }
     }
-    return 1;
+    throw std::runtime_error("Tabela hash cheia!"); // Caso a tabela esteja cheia
 }
 
 #endif
