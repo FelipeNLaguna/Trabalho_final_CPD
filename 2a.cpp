@@ -17,7 +17,7 @@ int main()
         // Abra o arquivo CSV usando std::ifstream
         std::ifstream players("players.csv");
 
-        std::ifstream rating("minirating.csv");
+        std::ifstream rating("rating.csv");
 
         // Verifique se o arquivo foi aberto corretamente
         if (!players.is_open())
@@ -60,7 +60,8 @@ int main()
 
             // Jogador *jog_aux = (buscaHashJ(stoi(row[1]), hash_jogadores));
             Jogador *jog_aux = (buscaHashJ2(stoi(row[1]), hash_jogadores));
-            (*jog_aux).add_avaliacao(stof(row[2]));
+            if (jog_aux != nullptr)
+                (*jog_aux).add_avaliacao(stof(row[2]));
         }
 
         auto fim = chrono::high_resolution_clock::now();
@@ -69,7 +70,7 @@ int main()
         std::cout << " " << duracao.count() << std::endl;
 
         // imprimeHashJ(hash_jogadores);
-        imprimeHashJ2(hash_jogadores);
+        // imprimeHashJ2(hash_jogadores);
 
         players.close();
         rating.close();
