@@ -4,6 +4,7 @@
 #include "parser.hpp" // Inclua o arquivo parser.hpp
 #include "Jogador.hpp"
 #include "hash_jog.hpp"
+#include "hash_user.hpp"
 #include "TrieST.hpp"
 #define TAM_HASH 19001
 
@@ -21,6 +22,8 @@ int main()
 
             std::ifstream rating("rating.csv");
 
+            std::ifstream tags("tags.csv");
+
             // Verifique se o arquivo foi aberto corretamente
             if (!players.is_open())
             {
@@ -29,8 +32,10 @@ int main()
 
             aria::csv::CsvParser players_csv(players);
             aria::csv::CsvParser rating_csv(rating);
+            aria::csv::CsvParser tags_csv(tags);
 
             TrieST<Jogador> trie;
+            TrieST_tags trie_tags;
 
             bool cabecalho = true;
             // Itere sobre o conteúdo do CSV
@@ -64,6 +69,29 @@ int main()
                 Jogador *jog_aux = (buscaHashJ2(stoi(row[1]), hash_jogadores));
                 if (jog_aux != nullptr)
                     (*jog_aux).add_avaliacao(stof(row[2]));
+            }
+
+            cabecalho = true;
+
+            // cria a arvore de tags
+            for(const auto& row : tags_csv){
+                if(cabecalho){
+                    cabecalho = false;
+                    continue;
+                }
+                // row[2] pq é onde esta contido as tags e row[1] os id_jogadores
+                trie_tags.put(row[2],std::stoi(row[1]));
+            }
+
+            Hash_user* hash = monta_hash();
+            
+            // busca de teste
+            int id_user = 123; // ID do usuário a ser buscado
+            User* user = busca_user(*hash, id_user);
+            if (user != nullptr) {
+                std::cout << "Usuário encontrado: " << user->id_user << std::endl;
+            } else {
+                std::cout << "Usuário não encontrado" << std::endl;
             }
 
             auto fim = chrono::high_resolution_clock::now();

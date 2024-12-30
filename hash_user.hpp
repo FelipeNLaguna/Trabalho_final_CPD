@@ -25,7 +25,7 @@ std::vector<User> le_users(const std::string nome_arq); // se o csv e retorna um
 int fun_hash(int id_user , int size);
 void insere_user(Hash_user& hash , const User& user);
 User* busca_user(Hash_user& hash , int id_user);
-void monta_hash(); //Usa as outras funcoes para monstar a hash
+Hash_user* monta_hash(); //Usa as outras funcoes para monstar a hash
 
 
 #endif

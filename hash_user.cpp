@@ -3,6 +3,7 @@
 #include<fstream>
 #include<iostream>
 #include<algorithm>
+#include <chrono>
 #define TAM_HASH 9473
 // tem que ser testado
 std::vector<User> le_users(const std::string nome_arq) {
@@ -111,40 +112,39 @@ User* busca_user(Hash_user& hash , int id_user){
     // na pesquisa testa se o resultado é nullptr se for retorna a string "Nao encontrado"
 }
 
-void monta_hash(){
-    Hash_user ht(TAM_HASH);
+Hash_user* monta_hash() {
+    
+    Hash_user* ht = new Hash_user(TAM_HASH); // Aloca dinamicamente
     std::vector<User> users = le_users("minirating.csv");
-    for(const auto& user : users){
-        insere_user(ht,user);
+    for (const auto& user : users) {
+        insere_user(*ht, user);
     }
-    // Estrutura pronta
-    //testes 
-     size_t metade = 100;
-
-    // Busca a primeira metade dos id_users
-    for (size_t i = 0; i < metade; ++i) {
-        int id_user = users[i].id_user;
-        User* user = busca_user(ht, id_user);
-        if (user != nullptr) {
-            std::cout << "Usuario encontrado:\n";
-            std::cout << "  ID User: " << user->id_user << "\n";
-            std::cout << "  ID Players: ";
-            for (const auto& id_player : user->id_player) {
-                std::cout << id_player << " ";
-            }
-            std::cout << "\n  Notas: ";
-            for (const auto& nota : user->notas) {
-                std::cout << nota << " ";
-            }
-            std::cout << "\n";
-        } else {
-            std::cout << "Usuário com ID " << id_user << " não encontrado.\n";
-        }
-    }
+    return ht; // Retorna o ponteiro para a hash alocada
 }
 /*
-int main(){
-    monta_hash();
+int main() {
+    auto inicio = std::chrono::high_resolution_clock::now();
+    Hash_user* hash = monta_hash();
+
+    auto fim = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duracao = fim - inicio;
+
+    std::cout << "Tempo para montar a hash: " << duracao.count() << " segundos" << std::endl;
+    // Use a hash...
+    
+    // Exemplo de busca de usuário
+    //int id_user = 123; // ID do usuário a ser buscado
+    //User* user = busca_user(*hash, id_user);
+   // if (user != nullptr) {
+   //     std::cout << "Usuário encontrado: " << user->id_user << std::endl;
+   // } else {
+    //    std::cout << "Usuário não encontrado" << std::endl;
+   // }
+
+   std::cout<< "Hash Montada" << std::endl;
+
+    //delete hash; // Desaloca a memória
     return 0;
 }
 */
+// Fazer a pesquisa (3.2)
