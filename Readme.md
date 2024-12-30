@@ -19,3 +19,6 @@ Pesquisas:
 3.3 - Percorrer a Hash , procurar por posições , ordenar ,printar; (A)
 
 3.4 - Usar a trie (ordenar); (F)
+
+Para compilar 2a.cpp -> g++ 2a.cpp hash_user.cpp -o 2a
+
