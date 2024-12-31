@@ -20,7 +20,7 @@ private:
     };
     std::shared_ptr<Node> root;
 
-    std::shared_ptr<Node> get(std::shared_ptr<Node> x, const std::string& key, int d)
+    std::shared_ptr<Node> get(std::shared_ptr<Node> x, const std::string &key, int d)
     {
         if (x == nullptr)
             return nullptr;
@@ -30,7 +30,7 @@ private:
         return get(x->next[c], key, d + 1);
     }
 
-    std::shared_ptr<Node> put(std::shared_ptr<Node> x, const std::string& key, std::shared_ptr<Value> val, int d)
+    std::shared_ptr<Node> put(std::shared_ptr<Node> x, const std::string &key, std::shared_ptr<Value> val, int d)
     {
         if (x == nullptr)
             x = std::make_shared<Node>();
@@ -44,34 +44,43 @@ private:
         return x;
     }
 
-    void collect(std::shared_ptr<Node> x, std::string& pre, std::vector<std::string>& q) {
-    if (x == nullptr) return;
-    if (x->val != nullptr) q.push_back(pre);
-    for (int c = 0; c < R; c++) {
-        if (x->next[c] != nullptr) {
-            pre.push_back(static_cast<char>(c));
-            collect(x->next[c], pre, q);
-            pre.pop_back();
+    void collect(std::shared_ptr<Node> x, std::string &pre, std::vector<std::string> &q)
+    {
+        if (x == nullptr)
+            return;
+        if (x->val != nullptr)
+            q.push_back(pre);
+        for (int c = 0; c < R; c++)
+        {
+            if (x->next[c] != nullptr)
+            {
+                pre.push_back(static_cast<char>(c));
+                collect(x->next[c], pre, q);
+                pre.pop_back();
+            }
         }
     }
-}
 
-void collect(std::shared_ptr<Node> x, const std::string& pre, std::vector<std::string>& q) {
-    if (x == nullptr) return;
-    if (x->val != nullptr) q.push_back(pre);
-    for (int c = 0; c < R; c++) {
-        if (x->next[c]) {
-            collect(x->next[c], pre + static_cast<char>(c), q);
+    void collectIds(std::shared_ptr<Node> x, std::vector<std::shared_ptr<Value>> &ids)
+    {
+        if (x == nullptr)
+            return;
+        if (x->val != nullptr)
+            ids.push_back(x->val); // Adiciona o ponteiro ao vetor
+        for (int c = 0; c < R; c++)
+        {
+            if (x->next[c] != nullptr)
+            {
+                collectIds(x->next[c], ids);
+            }
         }
     }
-}
-
 
 public:
     TrieST() : root(nullptr) {}
     ~TrieST() { root = nullptr; } // Gerenciamento automático por shared_ptr
 
-    std::shared_ptr<Value> get(const std::string& key)
+    std::shared_ptr<Value> get(const std::string &key)
     {
         auto x = get(root, key, 0);
         if (x == nullptr)
@@ -79,7 +88,7 @@ public:
         return x->val;
     }
 
-    void put(const std::string& key, Value val)
+    void put(const std::string &key, Value val)
     {
         root = put(root, key, std::make_shared<Value>(val), 0);
     }
@@ -92,18 +101,26 @@ public:
         return q;
     }
 
-    std::vector<std::string> keysWithPrefix(const std::string& pre)
+    std::vector<std::string> keysWithPrefix(const std::string &pre)
     {
         std::vector<std::string> q;
+        std::string prefix = pre;
         collect(get(root, pre, 0), pre, q);
         return q;
     }
 
-    std::vector<std::string> keysThatMatch(const std::string& pat)
+    std::vector<std::string> keysThatMatch(const std::string &pat)
     {
         std::vector<std::string> q;
         collect(root, "", pat, q);
         return q;
+    }
+
+    std::vector<std::shared_ptr<Value>> idsWithPrefix(const std::string &pre)
+    {
+        std::vector<std::shared_ptr<Value>> ids;
+        collectIds(get(root, pre, 0), ids);
+        return ids;
     }
 };
 

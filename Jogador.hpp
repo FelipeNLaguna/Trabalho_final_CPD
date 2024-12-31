@@ -26,7 +26,7 @@ public:
 
     explicit operator std::string()
     {
-        float rating_arredondado = avalicao_arredondada(6);
+        float rating_arredondado = avalicao_arredondada(7);
         return std::to_string(sofifa_id) + " " + short_name + " " + long_name + " " + player_position + " " + nationality + " " + std::to_string(rating_arredondado) + " " + std::to_string(count);
     }
 
