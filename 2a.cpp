@@ -19,7 +19,7 @@ int main()
         // Abra o arquivo CSV usando std::ifstream
         std::ifstream players("players.csv");
 
-        std::ifstream rating("midrating.csv");
+        std::ifstream rating("rating.csv");
 
         // Verifique se o arquivo foi aberto corretamente
         if (!players.is_open())
@@ -65,7 +65,7 @@ int main()
                 (*jog_aux).add_avaliacao(stof(row[2]));
         }
 
-        auto jogadores_encontrados = trie.idsWithPrefix("Pedro");
+        auto jogadores_encontrados = trie.idsWithPrefix("Lucas");
 
         // for (int i = 0; i < jogadores_encontrados.size(); i++)
         // {

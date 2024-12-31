@@ -23,7 +23,7 @@ int digitoMaisSignificativo(int n)
     return str[0] - '0';
 }
 
-void radix_sort(vector<shared_ptr<Jogador *>> &C, int modulo)
+void radix_sort(vector<shared_ptr<Jogador *>> &C, int modulo, int tam_mais_longo = 0)
 {
     vector<shared_ptr<Jogador *>> aux;
     aux.resize(C.size());
@@ -33,14 +33,12 @@ void radix_sort(vector<shared_ptr<Jogador *>> &C, int modulo)
     // Zera os indices
     fill(indices.begin(), indices.end(), 0);
 
-    int tam_mais_longo = 0;
-
     // Passa contando cada casa (LSD)
     for (int i = 0; i < C.size(); i++)
     {
 
-        int dado_ordenado = (*C[i])->sofifa_id;
-        // int avaliacao_inteira = (int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7));
+        // int dado_ordenado = (*C[i])->sofifa_id;
+        int dado_ordenado = (int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7));
 
         if (modulo == 10 && std::to_string(dado_ordenado).length() > tam_mais_longo)
         {
@@ -70,7 +68,7 @@ void radix_sort(vector<shared_ptr<Jogador *>> &C, int modulo)
     for (int i = C.size() - 1; i >= 0; i--)
     {
         // int avaliacao_inteira = (int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7));
-        aux[--indices[((*C[i])->sofifa_id % modulo) / (modulo / 10)]] = C[i];
+        aux[--indices[((int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7)) % modulo) / (modulo / 10)]] = C[i];
     }
 
     for (int i = 0; i < C.size(); i++)
@@ -78,11 +76,11 @@ void radix_sort(vector<shared_ptr<Jogador *>> &C, int modulo)
         C[i] = aux[i];
     }
 
-    if (std::to_string(modulo).length() - 1 <= tam_mais_longo)
-        {
-
-            radix_sort(C, modulo * 10);
-        }
+    int tam = std::to_string(modulo).length();
+    if (tam <= tam_mais_longo)
+    {
+        radix_sort(C, modulo * 10, tam_mais_longo);
+    }
 
     return;
 }
