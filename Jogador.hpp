@@ -2,12 +2,25 @@
 #define JOGADOR_HPP
 
 #include <iostream>
+#include <sstream>
 #include <string.h>
 #include <cmath>
 
 class Jogador
 {
 public:
+    bool temPosicao(std::string posicao_procurada) {
+    std::stringstream ss(player_position);
+    std::string item;
+    
+    while (std::getline(ss, item, ',')) {
+        if(item == posicao_procurada){
+            return true;
+        }
+    }
+    return false;
+}
+
     void imprimeJogador()
     {
         float rating_arredondado = avaliacao_arredondada(7);
