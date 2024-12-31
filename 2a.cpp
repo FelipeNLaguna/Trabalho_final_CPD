@@ -8,12 +8,21 @@
 #include "radix.cpp"
 #define TAM_HASH 19001
 
+template <typename Value>
+void inverteVetor(std::vector<Value> &vetor)
+{
+    int tam_vetor = vetor.size();
+    for (int i = 0; i < tam_vetor / 2; i++)
+    {
+        std::swap(vetor[i], vetor[tam_vetor - 1 - i]);
+    }
+}
+
 int main()
 {
     try
     {
-        // for (int i = 0; i < TAM_HASH * 10; i += 1000)
-        // {
+
         vector<Jogador *> hash_jogadores(TAM_HASH, nullptr);
 
         // Abra o arquivo CSV usando std::ifstream
@@ -45,7 +54,7 @@ int main()
                 continue;
             }
             Jogador *j = new Jogador(stoi(row[0]), row[1], row[2], row[3], row[4]);
-            // hashingJ(*j, hash_jogadores, TAM_HASH);
+
             hashingJ(j, hash_jogadores, TAM_HASH);
             trie.put(j->short_name, j);
         }
@@ -67,17 +76,13 @@ int main()
 
         auto jogadores_encontrados = trie.idsWithPrefix("Lucas");
 
-        // for (int i = 0; i < jogadores_encontrados.size(); i++)
-        // {
-        //     std::cout << static_cast<std::string>(**jogadores_encontrados[i]) << std::endl;
-        // }
-
         radix_sort(jogadores_encontrados, 10);
+
+        inverteVetor(jogadores_encontrados);
 
         for (int i = 0; i < jogadores_encontrados.size(); i++)
         {
             int teste = (**jogadores_encontrados[i]).avaliacao_arredondada(7) * pow(10, 7);
-            // std::cout << teste << std::endl;
             (**jogadores_encontrados[i]).imprimeJogador();
         }
 
@@ -86,7 +91,6 @@ int main()
         players.close();
         rating.close();
     }
-    // }
     catch (const std::exception &e)
     {
         std::cerr << "Erro: " << e.what() << std::endl;
