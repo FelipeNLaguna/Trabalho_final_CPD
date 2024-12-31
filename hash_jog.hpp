@@ -42,7 +42,7 @@ void imprimeHashJ(vector<Jogador *> jogadores)
     {
         if (jogadores[i])
         {
-            std::cout << static_cast<std::string>(*jogadores[i]) << std::endl;
+            (*jogadores[i]).imprimeJogador();
         }
         else
         {
