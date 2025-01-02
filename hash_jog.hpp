@@ -23,16 +23,12 @@ Jogador *buscaHashJ(int sofifa_id, const std::vector<Jogador *> &jogadores)
     return nullptr; // Jogador não encontrado após tentar todos os índices
 }
 
-void percorreExecuta(vector<pJogador *> jogadores, void (*f)(Jogador))
+void percorreExecuta(vector<Jogador *> jogadores, void (*f)(Jogador))
 {
     for (int i = 0; i < jogadores.size(); i++)
     {
-        pJogador *jog_aux = jogadores[i];
-        while (jog_aux != nullptr)
-        {
-            f(jog_aux->jogador);
-            jog_aux = jog_aux->next;
-        }
+        Jogador *jog_aux = jogadores[i];
+        f(*jog_aux);
     }
 }
 

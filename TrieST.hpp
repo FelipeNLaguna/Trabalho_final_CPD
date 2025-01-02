@@ -93,10 +93,11 @@ public:
         root = put(root, key, std::make_shared<Value>(val), 0);
     }
 
-    std::vector<std::string> keys() const
+    std::vector<std::string> keys()
     {
         std::vector<std::string> q;
-        collect(root, "", q);
+        std::string pre;
+        collect(root, pre, q);
         return q;
     }
 
@@ -119,6 +120,13 @@ public:
     {
         std::vector<std::shared_ptr<Value>> ids;
         collectIds(get(root, pre, 0), ids);
+        return ids;
+    }
+
+    std::vector<std::shared_ptr<Value>> ids()
+    {
+        std::vector<std::shared_ptr<Value>> ids;
+        collectIds(get(root, "", 0), ids);
         return ids;
     }
 };

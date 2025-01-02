@@ -18,7 +18,7 @@ void inverteVetor(std::vector<Value> &vetor)
     }
 }
 
-void constroiHashETrie(vector<Jogador *> hash_jogadores, TrieST<Jogador *> &trie)
+void constroiHashETrie(vector<Jogador *> &hash_jogadores, TrieST<Jogador *> &trie)
 {
     // Abra o arquivo CSV usando std::ifstream
     std::ifstream players("players.csv");
@@ -46,6 +46,7 @@ void constroiHashETrie(vector<Jogador *> hash_jogadores, TrieST<Jogador *> &trie
         Jogador *j = new Jogador(stoi(row[0]), row[1], row[2], row[3], row[4]);
 
         hashingJ(j, hash_jogadores, TAM_HASH);
+
         trie.put(j->short_name, j);
     }
 
@@ -68,24 +69,73 @@ void constroiHashETrie(vector<Jogador *> hash_jogadores, TrieST<Jogador *> &trie
     rating.close();
 }
 
+void ordenaJogadores(std::vector<std::shared_ptr<Jogador *>> &jogadores)
+{
+    radix_sort_shared(jogadores, 10);
+
+    inverteVetor(jogadores);
+}
+
+std::vector<Jogador *> filtroPosicao(vector<Jogador *> &hash, std::string posicao)
+{
+    std::vector<Jogador *> jogadores_filtrados;
+
+    for (int i = 0; i < hash.size(); i++)
+    {
+        if (hash[i] == nullptr)
+            continue;
+        Jogador *jog_aux = hash[i];
+
+        int conta = jog_aux->count;
+        if (jog_aux->count >= 1000 && jog_aux->temPosicao(posicao))
+        {
+            jogadores_filtrados.push_back(jog_aux);
+        }
+    }
+
+    return jogadores_filtrados;
+}
+
+std::vector<Jogador *> ordenaPosicao(vector<Jogador *> hash, std::string posicao, int qtd)
+{
+    auto jogadores_filtrados = filtroPosicao(hash, posicao);
+
+    radix_sort(jogadores_filtrados, 10);
+
+    inverteVetor(jogadores_filtrados);
+
+    std::vector<Jogador *> jogadores_ordenados;
+
+    for (int i = 0; i < qtd; i++)
+    {
+        jogadores_ordenados.push_back(jogadores_filtrados[i]);
+    }
+
+    return jogadores_ordenados;
+}
+
 int main()
 {
     try
     {
-
         vector<Jogador *> hash_jogadores(TAM_HASH, nullptr);
         TrieST<Jogador *> trie;
         constroiHashETrie(hash_jogadores, trie);
 
-        auto jogadores_encontrados = trie.idsWithPrefix("Lucas");
+        auto jogadores_encontrados = trie.ids();
 
-        radix_sort(jogadores_encontrados, 10);
+        ordenaJogadores(jogadores_encontrados);
 
-        inverteVetor(jogadores_encontrados);
+        int qtd = 20;
+        std::string posicao = "RWB";
 
-        for (int i = 0; i < jogadores_encontrados.size(); i++)
+        auto jogadores_filtrados_ordenados = ordenaPosicao(hash_jogadores, posicao, qtd);
+
+        for (int i = 0; i < jogadores_filtrados_ordenados.size(); i++)
         {
-            (**jogadores_encontrados[i]).imprimeJogador();
+            int tam = jogadores_filtrados_ordenados.size();
+
+            (*jogadores_filtrados_ordenados[i]).imprimeJogador();
         }
 
         // imprimeHashJ(hash_jogadores);
