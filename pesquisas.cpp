@@ -1,4 +1,4 @@
-#include "hash.hpp"
+#include "hash_jog.hpp"
 #include "hash_user.hpp"
 #include "Jogador.hpp"
 #include "TrieST.hpp"
@@ -11,7 +11,7 @@ void imprime_tags(const std::vector<std::string>& tags_consulta) {
     }
 }
 // pensar nos atributos passados e no retorno
-void pesquisas(){
+int main(){
 
     // push back para nova string
     std::string consulta;
@@ -63,7 +63,7 @@ void pesquisas(){
             }
             else{
                 std::cout << "Comando invalido" << std::endl;
-                return ;
+                return 1;
             }
         }
         i++;
@@ -84,7 +84,7 @@ void pesquisas(){
         }
         else{
            std::cout << "Comando invalido" << std::endl;
-            return; 
+            return 1; 
         }
     }
 
@@ -113,7 +113,7 @@ void pesquisas(){
        }
        else{
             std::cout << "Comando invalido" << std::endl;
-            return ;
+            return 1;
        }
     }
 
@@ -140,12 +140,12 @@ void pesquisas(){
                 }
                 else{
                     std::cout << "Comando invalido" << std::endl;
-                    return ;
+                    return 1;
                 }
             }
             else{
                 std::cout << "Comando invalido" << std::endl;
-                return ;
+                return 1;
             }
             j++;
         }
@@ -192,11 +192,16 @@ void pesquisas(){
                     }
                 }
             }
+            // testa se tem aspas abertas
+            if(cria_tag == 1){
+                std::cout << "Comando invalido" << std::endl;
+                return 1;
+            }
             imprime_tags(tags_consulta);
         }
         else{
             std::cout << "Comando invalido" << std::endl;
-            return ;
+            return 1;
         }
 
     }
