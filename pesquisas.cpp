@@ -1,5 +1,6 @@
 #include "hash_jog.hpp"
 #include "hash_user.hpp"
+#include "hash_user.cpp"
 #include "Jogador.hpp"
 #include "TrieST.hpp"
 #include "parser.hpp"
