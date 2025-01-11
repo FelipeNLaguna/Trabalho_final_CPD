@@ -2,16 +2,151 @@
 #include "hash_user.hpp"
 #include "Jogador.hpp"
 #include "TrieST.hpp"
+#include "parser.hpp"
+#include "radix.cpp"
+#include <set>
+#include <algorithm>
+#include <chrono>
 
-// toupper
+template <typename Value>
+void inverteVetor(std::vector<Value> &vetor)
+{
+    int tam_vetor = vetor.size();
+    for (int i = 0; i < tam_vetor / 2; i++)
+    {
+        std::swap(vetor[i], vetor[tam_vetor - 1 - i]);
+    }
+}
+
+void constroiHashETrie(vector<Jogador *> &hash_jogadores, TrieST<Jogador *> &trie)
+{
+    // Abra o arquivo CSV usando std::ifstream
+    std::ifstream players("players.csv");
+
+    std::ifstream rating("rating.csv");
+
+    // Verifique se o arquivo foi aberto corretamente
+    if (!players.is_open())
+    {
+        throw std::runtime_error("Não foi possível abrir o arquivo CSV.");
+    }
+
+    aria::csv::CsvParser players_csv(players);
+    aria::csv::CsvParser rating_csv(rating);
+
+    // Itere sobre o conteúdo do CSV
+    bool cabecalho = true;
+    for (const auto &row : players_csv)
+    {
+        if (cabecalho)
+        {
+            cabecalho = false;
+            continue;
+        }
+        Jogador *j = new Jogador(stoi(row[0]), row[1], row[2], row[3], row[4]);
+
+        hashingJ(j, hash_jogadores, 19001);
+
+        trie.put(j->short_name, j);
+    }
+
+    cabecalho = true;
+
+    for (const auto &row : rating_csv)
+    {
+        if (cabecalho)
+        {
+            cabecalho = false;
+            continue;
+        }
+
+        Jogador *jog_aux = (buscaHashJ(stoi(row[1]), hash_jogadores));
+        if (jog_aux != nullptr)
+            (*jog_aux).add_avaliacao(stof(row[2]));
+    }
+
+    players.close();
+    rating.close();
+}
+
+// Função para imprimir um vetor de inteiros
+void imprime_vetor(const std::vector<int>& vetor, int elementos_por_linha = 10) {
+    int contador = 0;
+    for (int valor : vetor) {
+        std::cout << valor << " ";
+        contador++;
+        if (contador % elementos_por_linha == 0) {
+            std::cout << std::endl; // Adiciona uma quebra de linha após um certo número de elementos
+        }
+    }
+    if (contador % elementos_por_linha != 0) {
+        std::cout << std::endl; // Adiciona uma quebra de linha no final, se necessário
+    }
+}
+
+TrieST_tags monta_tags(){
+    std::ifstream tags("tags.csv");
+
+    TrieST_tags trie_tags;
+
+    bool cabecalho = true;
+
+    if(!tags.is_open()){
+        std::cerr << "Erro ao abrir o arquivo de tags" << std::endl;
+        return trie_tags;
+    }
+
+    aria::csv::CsvParser tags_csv(tags);
+    // cria a arvore de tags
+    for(const auto& row : tags_csv){
+        if(cabecalho){
+            cabecalho = false;
+            continue;
+        }
+        // row[2] pq é onde esta contido as tags e row[1] os id_jogadores
+        trie_tags.put(row[2],std::stoi(row[1]));
+    }
+    return trie_tags;
+
+}
+
 // Função para imprimir o vetor de tags
 void imprime_tags(const std::vector<std::string>& tags_consulta) {
     for (const auto& tag : tags_consulta) {
         std::cout << "Tag: " << tag << std::endl;
     }
 }
-// pensar nos atributos passados e no retorno
+
+// Função para buscar jogadores pelo vetor de ids e ordenar por nome e rating
+std::vector<Jogador*> ordena_tags(std::vector<int>& ids, std::vector<Jogador*>& hash_jogadores) {
+    std::vector<Jogador*> jogadores;
+
+    for (int id : ids) {
+        Jogador* jogador = buscaHashJ(id, hash_jogadores);
+        if (jogador != nullptr) {
+            jogadores.push_back(jogador);
+        }
+    }
+
+    // Ordenar jogadores por rating usando radix sort
+    radix_sort(jogadores, 10);
+    inverteVetor(jogadores);
+
+    return jogadores;
+}
+
 int main(){
+    // monta as estruturas antes da pesquisa
+    auto inicio = std::chrono::high_resolution_clock::now();
+    Hash_user* hash = monta_hash();
+    TrieST_tags arvore_tags = monta_tags();
+    std::vector<Jogador*> hash_jogadores(19001, nullptr);
+    TrieST<Jogador*> trie;
+    constroiHashETrie(hash_jogadores, trie);
+    auto fim = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duracao = fim - inicio;
+
+    std::cout << "Tempo para montar as : " << duracao.count() << " segundos" << std::endl;
 
     // push back para nova string
     std::string consulta;
@@ -88,7 +223,6 @@ int main(){
         }
     }
 
-
     if(user){
        // testo se o proximo caracter é ' ' se for comeco a pegar o prefixo ate a palavra acabar
        // usa stoi e testa se é um numero
@@ -117,7 +251,6 @@ int main(){
        }
     }
 
-    
     if(top){
         // pega o numero ate o proximo espaco depois pega a posicao
         std::string num_top_std;
@@ -161,9 +294,7 @@ int main(){
         // Oq acontece quando a posicao nao existe?
 
         // chama pesquisa
-       
     }
-
 
     if(tags){
         // percorre ate achar aspar e forma uma palavra a cada fecha aspas
@@ -172,8 +303,6 @@ int main(){
             int cria_tag = 0;
             std::vector<std::string> tags_consulta;
             std::string tag_aux; // vai ser usada para colocar as tags no vetor
-            
-
 
             for(int j = i ; j < consulta.size() ; j++){
                 // testa se o caracter é uma aspa
@@ -197,12 +326,58 @@ int main(){
                 std::cout << "Comando invalido" << std::endl;
                 return 1;
             }
-            imprime_tags(tags_consulta);
+            // tags_consulta é um vetor de tags
+            // quero um vetor de ids que mantem as informacoes de tag
+
+            if(!tags_consulta.empty()){
+                std::cout << "Tags consulta nao esta vazio" << std::endl;
+                
+                std::vector<int> id_primeira_tag = arvore_tags.get(tags_consulta[0]);
+                std::set<int> cluster_id(id_primeira_tag.begin(), id_primeira_tag.end());
+                
+                std::vector<int> aux_arr;
+                std::set<int> aux_cluster;
+
+                for(int k = 1 ; k < tags_consulta.size() ; k++){
+                    std::set<int> intersection;
+                    
+                    // criando o set2
+                    aux_arr = arvore_tags.get(tags_consulta[k]);
+                    std::set<int> aux_cluster(aux_arr.begin(),aux_arr.end());
+
+                    std::set_intersection(
+                        cluster_id.begin() , cluster_id.end() ,
+                        aux_cluster.begin() , aux_cluster.end() ,
+                        std::inserter(intersection,intersection.begin()) // insere no conjunto
+                    );
+
+                    // atualiza o vetor de ids apos a interseccao
+                    cluster_id = intersection;
+                }
+                // transforma o set resultande em vetor
+                std::vector<int> id_jog(cluster_id.begin() , cluster_id.end());
+                imprime_vetor(id_jog);
+
+                // Buscar e ordenar jogadores
+                std::vector<Jogador*> hash_jogadores(19001, nullptr);
+                TrieST<Jogador*> trie;
+                constroiHashETrie(hash_jogadores, trie);
+
+                auto jogadores_ordenados = ordena_tags(id_jog, hash_jogadores);
+
+                for (auto jogador : jogadores_ordenados) {
+                    jogador->imprimeJogador();
+                }
+                // deixar bonito 
+            }
+            else{
+                std::cout << "Comando invalido" << std::endl;
+                return 1;
+            }
         }
         else{
             std::cout << "Comando invalido" << std::endl;
             return 1;
         }
-
     }
 }
