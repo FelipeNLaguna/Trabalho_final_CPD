@@ -23,67 +23,6 @@ int digitoMaisSignificativo(int n)
     return str[0] - '0';
 }
 
-void radix_sort_shared(vector<shared_ptr<Jogador *>> &C, int modulo, int tam_mais_longo = 0)
-{
-    vector<shared_ptr<Jogador *>> aux;
-    aux.resize(C.size());
-    vector<int> indices(10, 0);
-    float posicao, haValor = 0;
-
-    // Zera os indices
-    fill(indices.begin(), indices.end(), 0);
-
-    // Passa contando cada casa (LSD)
-    for (int i = 0; i < C.size(); i++)
-    {
-
-        // int dado_ordenado = (*C[i])->sofifa_id;
-        int dado_ordenado = (int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7));
-
-        if (modulo == 10 && std::to_string(dado_ordenado).length() > tam_mais_longo)
-        {
-            tam_mais_longo = std::to_string(dado_ordenado).length();
-        }
-
-        posicao = (dado_ordenado % modulo) / (modulo / 10);
-        // cout << (**C[i]).avaliacao_arredondada(7) * pow(10, 7) << " = ";
-        // cout << posicao << endl;
-        indices[posicao]++;
-        haValor = haValor || posicao;
-    }
-
-    // Se nenhuma posicao teve valor, o modulo ultrapassou o maior valor
-    if (!haValor)
-    {
-        return;
-    }
-
-    // Transforma em indice
-    for (int i = 1; i < 10; i++)
-    {
-        indices[i] += indices[i - 1];
-    }
-
-    // Percorre o vetor das palavras, consulta o indices e coloca na posicao correta
-    for (int i = C.size() - 1; i >= 0; i--)
-    {
-        // int avaliacao_inteira = (int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7));
-        aux[--indices[((int)((**C[i]).avaliacao_arredondada(7) * pow(10, 7)) % modulo) / (modulo / 10)]] = C[i];
-    }
-
-    for (int i = 0; i < C.size(); i++)
-    {
-        C[i] = aux[i];
-    }
-
-    int tam = std::to_string(modulo).length();
-    if (tam <= tam_mais_longo)
-    {
-        radix_sort_shared(C, modulo * 10, tam_mais_longo);
-    }
-
-    return;
-}
 
 void radix_sort(vector<Jogador *> &C, int modulo, int tam_mais_longo = 0)
 {

@@ -61,12 +61,12 @@ private:
         }
     }
 
-    void collectIds(std::shared_ptr<Node> x, std::vector<std::shared_ptr<Value>> &ids)
+    void collectIds(std::shared_ptr<Node> x, std::vector<int> &ids)
     {
         if (x == nullptr)
             return;
         if (x->val != nullptr)
-            ids.push_back(x->val); // Adiciona o ponteiro ao vetor
+            ids.push_back(*(x->val)); // Armazena o valor do ID como inteiro
         for (int c = 0; c < R; c++)
         {
             if (x->next[c] != nullptr)
@@ -116,9 +116,9 @@ public:
         return q;
     }
 
-    std::vector<std::shared_ptr<Value>> idsWithPrefix(const std::string &pre)
+    std::vector<int> idsWithPrefix(const std::string &pre)
     {
-        std::vector<std::shared_ptr<Value>> ids;
+        std::vector<int> ids;
         collectIds(get(root, pre, 0), ids);
         return ids;
     }

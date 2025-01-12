@@ -18,7 +18,7 @@ void inverteVetor(std::vector<Value> &vetor)
     }
 }
 
-void constroiHashETrie(vector<Jogador *> &hash_jogadores, TrieST<Jogador *> &trie)
+void constroiHashETrie(vector<Jogador *> &hash_jogadores, TrieST<int> &trie)
 {
     // Abra o arquivo CSV usando std::ifstream
     std::ifstream players("players.csv");
@@ -47,7 +47,7 @@ void constroiHashETrie(vector<Jogador *> &hash_jogadores, TrieST<Jogador *> &tri
 
         hashingJ(j, hash_jogadores, TAM_HASH);
 
-        trie.put(j->short_name, j);
+        trie.put(j->short_name, stoi(row[0]));
     }
 
     cabecalho = true;
@@ -69,9 +69,21 @@ void constroiHashETrie(vector<Jogador *> &hash_jogadores, TrieST<Jogador *> &tri
     rating.close();
 }
 
-void ordenaJogadores(std::vector<std::shared_ptr<Jogador *>> &jogadores)
+std::vector<Jogador *> buscaIdsHash(std::vector<int> ids_jogadores, std::vector<Jogador *> hash)
 {
-    radix_sort_shared(jogadores, 10);
+
+    std::vector<Jogador *> jogadores_encontrados;
+    for (const int id : ids_jogadores)
+    {
+        Jogador *jogador = buscaHashJ(id, hash);
+        jogadores_encontrados.push_back(jogador);
+    }
+    return jogadores_encontrados;
+}
+
+void ordenaJogadores(std::vector<Jogador *> &jogadores)
+{
+    radix_sort(jogadores, 10);
 
     inverteVetor(jogadores);
 }
@@ -116,18 +128,21 @@ std::vector<Jogador *> ordenaPosicao(vector<Jogador *> hash, std::string posicao
 
 int main()
 {
+
     try
     {
         vector<Jogador *> hash_jogadores(TAM_HASH, nullptr);
-        TrieST<Jogador *> trie;
+        TrieST<int> trie;
         constroiHashETrie(hash_jogadores, trie);
 
-        auto jogadores_encontrados = trie.ids();
+        auto ids_jogadores_encontrados = trie.idsWithPrefix("Inigo");
+
+        std::vector<Jogador *> jogadores_encontrados = buscaIdsHash(ids_jogadores_encontrados, hash_jogadores);
 
         ordenaJogadores(jogadores_encontrados);
 
         int qtd = 20;
-        std::string posicao = "RWB";
+        std::string posicao = "RW";
 
         auto jogadores_filtrados_ordenados = ordenaPosicao(hash_jogadores, posicao, qtd);
 
@@ -145,5 +160,7 @@ int main()
         std::cerr << "Erro: " << e.what() << std::endl;
     }
 
+    // Este getchar eh so para que a janela nao feche automatico
+    std::getchar();
     return 0;
 }
