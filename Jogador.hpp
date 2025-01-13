@@ -41,5 +41,10 @@ struct pJogador
     pJogador *next;
     pJogador(Jogador j) : jogador(j), next(nullptr) {}
 };
+//struct para a 3.2 com jogador e nota como parametros
+struct Jogador_nota{
+    Jogador* jog;
+    float nota;
+};
 
 #endif
