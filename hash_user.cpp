@@ -6,7 +6,7 @@
 #include <chrono>
 #include <unordered_map>
 #include <omp.h>
-#define TAM_HASH 9473
+#define TAM_HASH_USER 9473
 // tem que ser testado
 std::vector<User> le_users(const std::string nome_arq) {
     std::unordered_map<int, User> usuarios_map;
@@ -109,7 +109,7 @@ User* busca_user(Hash_user& hash , int id_user){
 }
 
 Hash_user* monta_hash() {
-    Hash_user* hash_users = new Hash_user(TAM_HASH);
+    Hash_user* hash_users = new Hash_user(TAM_HASH_USER);
     std::vector<User> usuarios = le_users("rating.csv");
 
     for (const User& user : usuarios) {

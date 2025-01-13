@@ -7,7 +7,7 @@
 #include <vector>
 #include <cmath>
 #include "Jogador.hpp"
-#define R 256
+#define A 256
 
 using namespace std;
 

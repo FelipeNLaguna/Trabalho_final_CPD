@@ -6,6 +6,7 @@
 #include <string>
 #include <queue>
 #include <memory>
+#include <algorithm>
 #include "Jogador.hpp"
 
 template <typename Value>
