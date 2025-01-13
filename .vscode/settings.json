@@ -64,6 +64,7 @@
         "iomanip": "cpp",
         "ratio": "cpp",
         "sstream": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "set": "cpp"
     }
 }

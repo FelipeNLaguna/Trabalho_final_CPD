@@ -12,11 +12,11 @@ template <typename Value>
 class TrieST
 {
 private:
-    static const int R = 256; // radix
+    static const int W = 256; // radix
     struct Node
     {
         std::shared_ptr<Value> val;
-        std::vector<std::shared_ptr<Node>> next = std::vector<std::shared_ptr<Node>>(R);
+        std::vector<std::shared_ptr<Node>> next = std::vector<std::shared_ptr<Node>>(W);
     };
     std::shared_ptr<Node> root;
 
@@ -50,7 +50,7 @@ private:
             return;
         if (x->val != nullptr)
             q.push_back(pre);
-        for (int c = 0; c < R; c++)
+        for (int c = 0; c < W; c++)
         {
             if (x->next[c] != nullptr)
             {
@@ -67,7 +67,7 @@ private:
             return;
         if (x->val != nullptr)
             ids.push_back(*(x->val)); // Armazena o valor do ID como inteiro
-        for (int c = 0; c < R; c++)
+        for (int c = 0; c < W; c++)
         {
             if (x->next[c] != nullptr)
             {
@@ -135,11 +135,11 @@ public:
 class TrieST_tags
 {
 private:
-    static const int R = 256; // Tamanho do alfabeto (ASCII)
+    static const int W = 256; // Tamanho do alfabeto (ASCII)
     struct Node
     {
         std::vector<int> val; // Vetor de inteiros associados à chave completa
-        std::vector<std::shared_ptr<Node>> next = std::vector<std::shared_ptr<Node>>(R);
+        std::vector<std::shared_ptr<Node>> next = std::vector<std::shared_ptr<Node>>(W);
     };
     std::shared_ptr<Node> root = nullptr; // Raiz da trie
 
@@ -203,7 +203,7 @@ private:
             return;
         if (!x->val.empty())
             results.push_back(prefix);
-        for (char c = 0; c < R; c++)
+        for (char c = 0; c < W; c++)
         {
             collect(x->next[c], prefix + c, results);
         }

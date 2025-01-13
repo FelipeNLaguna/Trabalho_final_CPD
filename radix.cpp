@@ -1,10 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <cmath>
-#include "Jogador.hpp"
-#define R 256
+#include "radix.hpp"
 
 using namespace std;
 
@@ -24,7 +18,7 @@ int digitoMaisSignificativo(int n)
 }
 
 
-void radix_sort(vector<Jogador *> &C, int modulo, int tam_mais_longo = 0)
+void radix_sort(vector<Jogador *> &C, int modulo, int tam_mais_longo)
 {
     vector<Jogador *> aux;
     aux.resize(C.size());
