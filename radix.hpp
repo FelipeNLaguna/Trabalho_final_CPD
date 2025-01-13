@@ -19,9 +19,9 @@ void radix_sort(vector<Jogador *> &C, int modulo, int tam_mais_longo = 0);
 
 void radix_sort_msd(vector<string> &C, int piso, int teto, int n);
 
-int getNotaKey( Jogador_nota& jogador_nota);
+int getNotaKey(const Jogador_nota& jogador_nota);
 
-int getRatingKey( Jogador_nota& jogador_nota);
+int getRatingKey(const Jogador_nota& jogador_nota);
 
 void radix_sort_jogadores(std::vector<Jogador_nota>& jogadores, bool ordenarPorNota);
 
