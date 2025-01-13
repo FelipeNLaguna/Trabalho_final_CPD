@@ -87,7 +87,7 @@ void radix_sort_msd(vector<string> &C, int piso, int teto, int n)
         return;
     }
 
-    vector<int> conta(R + 2, 0);
+    vector<int> conta(A + 2, 0);
     vector<string> aux(teto - piso + 1);
 
     // Preenchendo o vetor das letras com as frequencias
@@ -97,7 +97,7 @@ void radix_sort_msd(vector<string> &C, int piso, int teto, int n)
     }
 
     // Transforma a contagem em indices
-    for (int r = 0; r < R + 1; r++)
+    for (int r = 0; r < A + 1; r++)
     {
         conta[r + 1] += conta[r];
     }
@@ -115,7 +115,7 @@ void radix_sort_msd(vector<string> &C, int piso, int teto, int n)
     }
 
     // Chama recursivamente para cada caracter
-    for (int r = 0; r < R; r++)
+    for (int r = 0; r < A; r++)
     {
         radix_sort_msd(C, piso + conta[r], piso + conta[r + 1] - 1, n + 1);
     }

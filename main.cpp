@@ -18,6 +18,8 @@ void melhoresPosicao(int N, std::string posicao, std::vector<Jogador *> hash_jog
 {
     auto jogadores_filtrados_ordenados = ordenaPosicao(hash_jogadores, posicao, N);
 
+    if (jogadores_filtrados_ordenados.size() == 0)
+        return;
     imprimir_jogadores(jogadores_filtrados_ordenados);
 }
 
@@ -70,15 +72,10 @@ int main()
                 break;
             }
 
+            std::cout << "\n";
             pergunta();
             std::cin >> pesquisa_escolhida;
         }
-        // for (int i = 0; i < jogadores_filtrados_ordenados.size(); i++)
-        // {
-        //     int tam = jogadores_filtrados_ordenados.size();
-
-        //     (*jogadores_filtrados_ordenados[i]).imprimeJogador();
-        // }
     }
     catch (const std::exception &e)
     {
