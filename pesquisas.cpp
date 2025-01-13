@@ -136,6 +136,51 @@ std::vector<Jogador*> ordena_tags(std::vector<int>& ids, std::vector<Jogador*>& 
     return jogadores;
 }
 
+// Função para ordenar primeiro por rating e depois por nota
+void ordenar_users(std::vector<Jogador_nota>& jogadores) {
+    // Primeiro, ordena pelo rating (secundário)
+    radix_sort_jogadores(jogadores, false);
+
+    // Depois, ordena pela nota (principal), preservando a estabilidade
+    radix_sort_jogadores(jogadores, true);
+}
+
+void printTop30PlayersByUser(Hash_user* hash_users, int id_user, std::vector<Jogador*>& hash_jogadores) {
+    User* user = busca_user(*hash_users, id_user);
+    if (!user) {
+        std::cout << "Usuário não encontrado." << std::endl;
+        return;
+    }
+
+    const std::vector<int>& ids = user->id_player;
+    const std::vector<float>& notas = user->notas;
+
+    std::vector<Jogador_nota> jogadores_com_notas;
+
+    // Associa os IDs aos jogadores e suas respectivas notas
+    for (size_t i = 0; i < ids.size(); ++i) {
+        Jogador* jogador = buscaHashJ(ids[i], hash_jogadores);
+        if (jogador) {
+            jogadores_com_notas.push_back({jogador, notas[i]});
+        }
+    }
+
+    // Ordena os jogadores
+    ordenar_users(jogadores_com_notas);
+
+    // Limita a 30 jogadores ou menos
+    size_t top_count = std::min(jogadores_com_notas.size(), size_t(30));
+
+    // Imprime os 30 melhores jogadores
+    std::cout << "Top " << top_count << " jogadores avaliados pelo usuário " << id_user << ":\n";
+    for (size_t i = 0; i < top_count; ++i) {
+        Jogador* jogador = jogadores_com_notas[i].jog;
+        float nota = jogadores_com_notas[i].nota;
+        std::cout << i + 1 << ". " << jogador->short_name
+                  << " (Nota: " << nota
+                  << ", Rating: " << jogador->rating << ")\n";
+    }
+}
 int main(){
     // monta as estruturas antes da pesquisa
     auto inicio = std::chrono::high_resolution_clock::now();
@@ -245,6 +290,7 @@ int main(){
             std::cout << id_user << std::endl;
             // testa se o numero é valido 
             // se for chama pesquisa 3.2
+            printTop30PlayersByUser(hash,id_user,hash_jogadores);
        }
        else{
             std::cout << "Comando invalido" << std::endl;
