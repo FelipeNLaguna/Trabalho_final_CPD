@@ -5,7 +5,7 @@
 #include "TrieST.hpp"
 #include "parser.hpp"
 #include "radix.cpp"
-#include "uteis.hpp"
+#include "uteis.cpp"
 #include <set>
 #include <algorithm>
 #include <chrono>
@@ -232,6 +232,7 @@ int main(){
                 }
                 std::cout << nome_prefixo << std::endl;
                 // chama pesquisa 3.1
+                pesqPrefixos(hash_jogadores, trie, nome_prefixo);
             }
             else{
             std::cout << "Comando invalido" << std::endl;
@@ -275,6 +276,7 @@ int main(){
             int num_top;
             bool terminou_num = false; // o numero já foi lido?
             bool primeiro_carac = false; // testa se é num
+            int cria_top = 0;
 
             int j = i;
 
@@ -284,9 +286,10 @@ int main(){
                     num_top_std.push_back(consulta[j]);
                     primeiro_carac = true;
                 }
-                else if(consulta[j] == ' '){
+                else if(consulta[j] == '\''){
                     if(primeiro_carac){
                         terminou_num = true;
+                        cria_top++;
                     }
                     else{
                         std::cout << "Comando invalido" << std::endl;
@@ -304,13 +307,32 @@ int main(){
 
             // continua de onde parou 
             for(j ; j < consulta.size() ; j++){
-                posicao.push_back(consulta[j]);
-            }
+                // testa se o caracter é uma aspa
+                    if(consulta[j] == '\''){
+                        cria_top++;
+                        if(cria_top == 2){
+                            cria_top = 0;
+                            break;
+                        }
+                    }
+                    else{
+                        // testa se o cria_top é diferente de zero(aspa tá aberta)
+                        if(cria_top){
+                            posicao.push_back(consulta[j]);
+                        }
+                    }
+                }
+                // testa se tem aspas abertas
+                if(cria_top == 1){
+                    std::cout << "Comando invalido" << std::endl;
+                    return 1;
+                }
+            
             std::cout << "Posicao : " << posicao << "Num : " << num_top << std::endl;
 
             // Oq acontece quando a posicao nao existe?
-
             // chama pesquisa
+            melhoresPosicao(num_top, posicao, hash_jogadores);
         }
 
         if(tags){
@@ -377,9 +399,7 @@ int main(){
 
                     auto jogadores_ordenados = ordena_tags(id_jog, hash_jogadores);
 
-                    for (auto jogador : jogadores_ordenados) {
-                        jogador->imprimeJogador();
-                    }
+                    imprimir_jogadores(jogadores_ordenados);
                     // deixar bonito 
                 }
                 else{
