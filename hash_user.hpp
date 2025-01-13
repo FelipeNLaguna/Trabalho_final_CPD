@@ -9,7 +9,7 @@
 struct User{
     int id_user;
     std::vector<int> id_player;
-    std::vector<double> notas; // uma nota para cada jogador
+    std::vector<float> notas; // uma nota para cada jogador
     // cuidar para o id e a nota estarem no mesmo indice
 };
 
