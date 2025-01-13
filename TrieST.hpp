@@ -135,11 +135,11 @@ public:
 class TrieST_tags
 {
 private:
-    static const int W = 256; // Tamanho do alfabeto (ASCII)
+    static const int R = 256; // Tamanho do alfabeto (ASCII)
     struct Node
     {
         std::vector<int> val; // Vetor de inteiros associados à chave completa
-        std::vector<std::shared_ptr<Node>> next = std::vector<std::shared_ptr<Node>>(W);
+        std::vector<std::shared_ptr<Node>> next = std::vector<std::shared_ptr<Node>>(R);
     };
     std::shared_ptr<Node> root = nullptr; // Raiz da trie
 
@@ -149,7 +149,10 @@ private:
             x = std::make_shared<Node>();
         if (d == key.length())
         {
-            x->val.push_back(val); // Adiciona o valor ao vetor
+            // adiciona o id_jogador ao vetor apenas se nao estiver presente
+            if(std::find(x->val.begin(), x->val.end() , val) == x->val.end()){
+                x->val.push_back(val); // Adiciona o valor ao vetor
+            }
             return x;
         }
         char c = key[d];
@@ -203,7 +206,7 @@ private:
             return;
         if (!x->val.empty())
             results.push_back(prefix);
-        for (char c = 0; c < W; c++)
+        for (char c = 0; c < R; c++)
         {
             collect(x->next[c], prefix + c, results);
         }
