@@ -120,3 +120,59 @@ void radix_sort_msd(vector<string> &C, int piso, int teto, int n)
         radix_sort_msd(C, piso + conta[r], piso + conta[r + 1] - 1, n + 1);
     }
 };
+// Função para extrair o valor do critério principal (nota arredondada para 7 casas decimais)
+int getNotaKey(const Jogador_nota& jogador_nota) {
+    return static_cast<int>(std::ceil(jogador_nota.nota * std::pow(10, 7)));
+}
+
+int getRatingKey(const Jogador_nota& jogador_nota) {
+    // Calcula o rating global arredondado para 7 casas decimais
+    return static_cast<int>((jogador_nota.jog->avaliacao_arredondada(7)) * std::pow(10, 7));
+}
+
+void radix_sort_jogadores(std::vector<Jogador_nota>& jogadores, bool ordenarPorNota) {
+    const int RADIX = 10; // Base decimal
+    int maxValue = 0;
+
+    // Determina qual chave será usada (nota ou rating arredondado)
+    auto getKey = ordenarPorNota ? getNotaKey : getRatingKey;
+
+    // Encontra o maior valor da chave para calcular o número de dígitos
+    for (const auto& jogador_nota : jogadores) {
+        maxValue = std::max(maxValue, getKey(jogador_nota));
+    }
+
+    int exp = 1; // Começa pelo dígito menos significativo (LSD)
+
+    // Vetores auxiliares
+    std::vector<Jogador_nota> aux(jogadores.size());
+    std::vector<int> count(RADIX);
+
+    while (maxValue / exp > 0) {
+        // Zera o vetor de contagem
+        std::fill(count.begin(), count.end(), 0);
+
+        // Conta a frequência de cada dígito na posição atual
+        for (const auto& jogador_nota : jogadores) {
+            int digit = (getKey(jogador_nota) / exp) % RADIX;
+            count[digit]++;
+        }
+
+        // Acumula os índices de trás para frente (ordem decrescente)
+        for (int i = RADIX - 2; i >= 0; i--) {
+            count[i] += count[i + 1];
+        }
+
+        // Distribui os elementos no vetor auxiliar em ordem decrescente
+        for (int i = jogadores.size() - 1; i >= 0; i--) {
+            int digit = (getKey(jogadores[i]) / exp) % RADIX;
+            aux[--count[digit]] = jogadores[i];
+        }
+
+        // Copia o vetor auxiliar de volta para o vetor original
+        jogadores = aux;
+
+        // Passa para o próximo dígito mais significativo
+        exp *= RADIX;
+    }
+}
