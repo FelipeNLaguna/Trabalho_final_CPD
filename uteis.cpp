@@ -1,6 +1,3 @@
-#ifndef UTEIS_HPP
-#define UTEIS_HPP
-
 #include <fstream> // Para std::ifstream
 #include "parser.hpp"
 #include "hash_jog.hpp" // Inclua o arquivo parser.hpp
@@ -130,5 +127,3 @@ std::vector<Jogador *> ordenaPosicao(vector<Jogador *> hash, std::string posicao
 
     return jogadores_ordenados;
 }
-
-#endif

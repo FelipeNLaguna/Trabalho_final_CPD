@@ -1,3 +1,6 @@
+#ifndef UTEIS_HPP
+#define UTEIS_HPP
+
 #include "TrieST.hpp"
 #include "Jogador.hpp"
 #define TAM_HASH 19001
@@ -14,3 +17,5 @@ void ordenaJogadores(std::vector<Jogador *> &jogadores);
 std::vector<Jogador *> filtroPosicao(std::vector<Jogador *> &hash, std::string posicao);
 
 std::vector<Jogador *> ordenaPosicao(std::vector<Jogador *> hash, std::string posicao, int qtd);
+
+#endif

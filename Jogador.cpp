@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
+#include <cctype>
 #include "Jogador.hpp"
 
 bool Jogador::temPosicao(std::string posicao_procurada)
@@ -13,6 +15,14 @@ bool Jogador::temPosicao(std::string posicao_procurada)
 
     while (std::getline(ss, item, ','))
     {
+        // Remover espaços antes e depois da posição
+        item.erase(item.begin(), std::find_if(item.begin(), item.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }));
+        item.erase(std::find_if(item.rbegin(), item.rend(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }).base(), item.end());
+
         if (item == posicao_procurada)
         {
             return true;
