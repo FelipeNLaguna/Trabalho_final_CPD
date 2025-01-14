@@ -33,6 +33,16 @@ void pergunta()
 
 int main()
 {
+    // Jogador teste = {232411, "C. Nkunku", "Christopher Nkunku", "CAM, ST", "France"};
+    // if(teste.temPosicao("ST")){
+    //     std::cout << "tem a posicao ST" << std::endl;
+    // }
+
+    // if(teste.temPosicao("CAM")){
+    //     std::cout << "tem a posicao CAM" << std::endl;
+    // }
+
+    // return 0;
     try
     {
         std::vector<Jogador *> hash_jogadores(TAM_HASH, nullptr);

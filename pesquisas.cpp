@@ -132,6 +132,8 @@ void melhoresPosicao(int N, std::string posicao, std::vector<Jogador *> hash_jog
 {
     auto jogadores_filtrados_ordenados = ordenaPosicao(hash_jogadores, posicao, N);
 
+    if (jogadores_filtrados_ordenados.size() == 0)
+        return;
     imprimir_jogadores(jogadores_filtrados_ordenados);
 }
 
