@@ -85,25 +85,17 @@ void ordenar_users(std::vector<Jogador_nota>& jogadores) {
     radix_sort_jogadores(jogadores, true);
 }
 
-void printTop30PlayersByUser(Hash_user* hash_users, int id_user, std::vector<Jogador*>& hash_jogadores) {
+void printa_users(Hash_user* hash_users, int id_user, std::vector<Jogador*>& hash_jogadores) {
     User* user = busca_user(*hash_users, id_user);
     if (!user) {
         std::cout << "Usuário não encontrado." << std::endl;
         return;
     }
 
-    const std::vector<int>& ids = user->id_player;
-    const std::vector<float>& notas = user->notas;
+    std::vector<int>& ids = user->id_player;
+    std::vector<float>& notas = user->notas;
 
     std::vector<Jogador_nota> jogadores_com_notas;
-
-    // Associa os IDs aos jogadores e suas respectivas notas
-    for (size_t i = 0; i < ids.size(); ++i) {
-        Jogador* jogador = buscaHashJ(ids[i], hash_jogadores);
-        if (jogador) {
-            jogadores_com_notas.push_back({jogador, notas[i]});
-        }
-    }
 
     // Ordena os jogadores
     ordenar_users(jogadores_com_notas);
@@ -111,15 +103,12 @@ void printTop30PlayersByUser(Hash_user* hash_users, int id_user, std::vector<Jog
     // Limita a 30 jogadores ou menos
     size_t top_count = std::min(jogadores_com_notas.size(), size_t(30));
 
-    // Imprime os 30 melhores jogadores
-    std::cout << "Top " << top_count << " jogadores avaliados pelo usuário " << id_user << ":\n";
-    for (size_t i = 0; i < top_count; ++i) {
-        Jogador* jogador = jogadores_com_notas[i].jog;
-        float nota = jogadores_com_notas[i].nota;
-        std::cout << i + 1 << ". " << jogador->short_name
-                  << " (Nota: " << nota
-                  << ", Rating: " << jogador->rating << ")\n";
-    }
+    // Cria um vetor limitado aos top 30 jogadores
+    std::vector<Jogador_nota> top_jogadores(jogadores_com_notas.begin(), jogadores_com_notas.begin() + top_count);
+
+    // Usa a função imprime_users para exibir o resultado formatado
+    imprime_users(top_jogadores);
+
 }
 void pesqPrefixos(std::vector<Jogador *> hash_jogadores, TrieST<int> trie, std::string nome)
 {
@@ -261,7 +250,7 @@ int main(){
                 std::cout << id_user << std::endl;
                 // testa se o numero é valido 
                 // se for chama pesquisa 3.2
-                printTop30PlayersByUser(hash,id_user,hash_jogadores);
+                printa_users(hash,id_user,hash_jogadores);
         }
         else{
                 std::cout << "Comando invalido" << std::endl;
@@ -369,7 +358,7 @@ int main(){
                 // quero um vetor de ids que mantem as informacoes de tag
 
                 if(!tags_consulta.empty()){
-                    std::cout << "Tags consulta nao esta vazio" << std::endl;
+                    //std::cout << "Tags consulta nao esta vazio" << std::endl;
                     
                     std::vector<int> id_primeira_tag = arvore_tags.get(tags_consulta[0]);
                     std::set<int> cluster_id(id_primeira_tag.begin(), id_primeira_tag.end());
@@ -395,7 +384,7 @@ int main(){
                     }
                     // transforma o set resultande em vetor
                     std::vector<int> id_jog(cluster_id.begin() , cluster_id.end());
-                    imprime_vetor(id_jog);
+                    //imprime_vetor(id_jog);
 
                     auto jogadores_ordenados = ordena_tags(id_jog, hash_jogadores);
 
