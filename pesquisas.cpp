@@ -92,10 +92,18 @@ void printa_users(Hash_user* hash_users, int id_user, std::vector<Jogador*>& has
         return;
     }
 
-    std::vector<int>& ids = user->id_player;
-    std::vector<float>& notas = user->notas;
+    const std::vector<int>& ids = user->id_player;
+    const std::vector<float>& notas = user->notas;
 
     std::vector<Jogador_nota> jogadores_com_notas;
+
+    // Associa os IDs aos jogadores e suas respectivas notas
+    for (size_t i = 0; i < ids.size(); ++i) {
+        Jogador* jogador = buscaHashJ(ids[i], hash_jogadores);
+        if (jogador) {
+            jogadores_com_notas.push_back({jogador, notas[i]});
+        }
+    }
 
     // Ordena os jogadores
     ordenar_users(jogadores_com_notas);
@@ -384,7 +392,7 @@ int main(){
                     }
                     // transforma o set resultande em vetor
                     std::vector<int> id_jog(cluster_id.begin() , cluster_id.end());
-                    //imprime_vetor(id_jog);
+                    imprime_vetor(id_jog);
 
                     auto jogadores_ordenados = ordena_tags(id_jog, hash_jogadores);
 

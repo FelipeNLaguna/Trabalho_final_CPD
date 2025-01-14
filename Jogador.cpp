@@ -179,12 +179,13 @@ void imprime_users(const std::vector<Jogador_nota>& tabela) {
         Jogador* jogador = jogador_nota.jog;
         float nota = jogador_nota.nota;
 
-        std::cout << "| " << std::setw(larguras_colunas[0]) << std::left << jogador->sofifa_id << " ";
-        std::cout << "| " << std::setw(larguras_colunas[1]) << std::left << jogador->short_name << " ";
-        std::cout << "| " << std::setw(larguras_colunas[2]) << std::left << jogador->long_name << " ";
-        std::cout << "| " << std::setw(larguras_colunas[3]) << std::left << jogador->avaliacao_arredondada(7) << " ";
-        std::cout << "| " << std::setw(larguras_colunas[4]) << std::left << jogador->count << " ";
-        std::cout << "| " << std::setw(larguras_colunas[5]) << std::left << nota << " |\n";
+        std::cout << "| " << std::setw(larguras_colunas[0]) << std::left << jogador->sofifa_id
+                  << " | " << std::setw(larguras_colunas[1]) << std::left << jogador->short_name
+                  << " | " << std::setw(larguras_colunas[2]) << std::left << jogador->long_name
+                  << " | " << std::setw(larguras_colunas[3]) << std::left << std::fixed << std::setprecision(6) << jogador->avaliacao_arredondada(7)
+                  << " | " << std::setw(larguras_colunas[4]) << std::left << jogador->count
+                  << " | " << std::setw(larguras_colunas[5]) << std::left << std::fixed << std::setprecision(1) << nota
+                  << " |\n";
     }
 
     imprimir_separador();
