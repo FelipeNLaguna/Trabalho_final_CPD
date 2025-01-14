@@ -3,12 +3,19 @@
 
 #include <iostream>
 #include <sstream>
-#include <string.h>
+#include <string>
 #include <cmath>
 #include <iomanip>
+#include <vector>
 
-class Jogador
-{
+// Definição da struct para jogador e nota (vem antes da classe Jogador)
+struct Jogador_nota {
+    class Jogador* jog; // Declarar como classe para resolver dependência
+    float nota;
+};
+
+// Declaração da classe Jogador
+class Jogador {
 public:
     bool temPosicao(std::string posicao_procurada);
 
@@ -28,23 +35,14 @@ public:
 
     void add_avaliacao(float avaliacao);
 
-    Jogador(int s, std::string sn, std::string ln, std::string pp, std::string n) : sofifa_id(s), short_name(sn), long_name(ln), player_position(pp), nationality(n) {}
+    Jogador(int s, std::string sn, std::string ln, std::string pp, std::string n)
+        : sofifa_id(s), short_name(sn), long_name(ln), player_position(pp), nationality(n) {}
 
     std::string atributoNumerado(int n);
 };
 
-void imprimir_jogadores(const std::vector<Jogador *> &tabela);
-
-struct pJogador
-{
-    Jogador jogador;
-    pJogador *next;
-    pJogador(Jogador j) : jogador(j), next(nullptr) {}
-};
-//struct para a 3.2 com jogador e nota como parametros
-struct Jogador_nota{
-    Jogador* jog;
-    float nota;
-};
+// Função para imprimir jogadores formatados
+void imprimir_jogadores(const std::vector<Jogador*>& tabela);
+void imprime_users(const std::vector<Jogador_nota>& tabela);
 
 #endif
