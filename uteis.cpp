@@ -106,7 +106,11 @@ std::vector<Jogador *> filtroPosicao(vector<Jogador *> &hash, std::string posica
 
 std::vector<Jogador *> ordenaPosicao(vector<Jogador *> hash, std::string posicao, int qtd)
 {
+    
     auto jogadores_filtrados = filtroPosicao(hash, posicao);
+
+    if (jogadores_filtrados.size() == 0)
+        return {};
 
     radix_sort(jogadores_filtrados, 10);
 
@@ -118,6 +122,8 @@ std::vector<Jogador *> ordenaPosicao(vector<Jogador *> hash, std::string posicao
     {
         jogadores_ordenados.push_back(jogadores_filtrados[i]);
     }
+
+
 
     return jogadores_ordenados;
 }
