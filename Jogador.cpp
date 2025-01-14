@@ -85,6 +85,10 @@ std::string Jogador::atributoNumerado(int n)
     case 6:
         return std::to_string(count);
         break;
+    
+    default:
+        return "";
+        break;    
     }
 }
 

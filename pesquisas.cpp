@@ -394,7 +394,7 @@ int main(){
                     }
                     // transforma o set resultande em vetor
                     std::vector<int> id_jog(cluster_id.begin() , cluster_id.end());
-                    imprime_vetor(id_jog);
+                    //imprime_vetor(id_jog);
 
                     auto jogadores_ordenados = ordena_tags(id_jog, hash_jogadores);
 
